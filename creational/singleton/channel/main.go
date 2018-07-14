@@ -70,4 +70,5 @@ func (s *singleton) Stop() {
 	close(addCh)
 	close(getCountCh)
 	close(quitCh)
+	instance = nil
 }

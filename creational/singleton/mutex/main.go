@@ -2,15 +2,24 @@ package mutex
 
 import "sync"
 
+type Singleton interface {
+	AddOne()
+	GetCount() int
+}
+
 type singleton struct {
 	count int
 	sync.RWMutex
 }
 
-var instance singleton
+var instance *singleton
 
-func GetInstance() *singleton {
-	return &instance
+func GetInstance() Singleton {
+	if instance==nil {
+		instance = new(singleton)
+	}
+
+	return instance
 }
 
 func (s *singleton) AddOne() {

@@ -2,8 +2,8 @@ package mutex
 
 import (
 	"testing"
-	"fmt"
 	"sync"
+	"fmt"
 )
 
 func TestStartInstance(t *testing.T) {
@@ -41,5 +41,30 @@ func TestStartInstance(t *testing.T) {
 
 	if currentCount1 != n*2 {
 		t.Errorf("Counts not match\nCurrentCount1=%d\nN*2=%d", currentCount1, n*2)
+	}
+}
+
+
+func BenchmarkMutexSingletonParallel(b *testing.B) {
+	singleton := GetInstance()
+	singleton2 := GetInstance()
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			singleton.AddOne()
+			singleton2.GetCount()
+			singleton2.AddOne()
+			singleton.GetCount()
+		}
+	})
+}
+
+func BenchmarkMutexSingleton(b *testing.B) {
+	singleton := GetInstance()
+	singleton2 := GetInstance()
+	for i := 0; i < b.N; i++ {
+		singleton.AddOne()
+		singleton2.GetCount()
+		singleton2.AddOne()
+		singleton.GetCount()
 	}
 }
