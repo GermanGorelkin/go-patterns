@@ -31,12 +31,6 @@ func TestStartInstance(t *testing.T) {
 
 	wg.Wait()
 
-	//var val int
-	//for val != n*2 {
-	//	val = singleton.GetCount()
-	//	time.Sleep(10 * time.Millisecond)
-	//}
-
 	fmt.Printf("Current count is %d\n", singleton.GetCount())
 
 	currentCount1 := singleton.GetCount()

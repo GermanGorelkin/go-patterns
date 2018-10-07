@@ -1,25 +1,10 @@
 package channel
 
+import "sync"
+
 var addCh chan bool = make(chan bool)
 var getCountCh chan chan int = make(chan chan int)
 var quitCh chan bool = make(chan bool)
-
-//func init() {
-//	var count int
-//
-//	go func(addCh <-chan bool, getCountCh <-chan chan int, quitCh <-chan bool) {
-//		for {
-//			select {
-//			case <-addCh:
-//				count++
-//			case ch := <-getCountCh:
-//				ch <- count
-//			case <-quitCh:
-//				return
-//			}
-//		}
-//	}(addCh, getCountCh, quitCh)
-//}
 
 type Singleton interface {
 	AddOne()
@@ -32,12 +17,13 @@ type singleton struct {
 }
 
 var instance *singleton
+var once sync.Once
 
 func GetInstance() Singleton {
-	if instance==nil {
+	once.Do(func() {
 		instance = new(singleton)
 
-		go func(addCh <-chan bool, getCountCh <-chan chan int, quitCh <-chan bool) {
+		go func() {
 			for {
 				select {
 				case <-addCh:
@@ -48,8 +34,8 @@ func GetInstance() Singleton {
 					return
 				}
 			}
-		}(addCh, getCountCh, quitCh)
-	}
+		}()
+	})
 
 	return instance
 }

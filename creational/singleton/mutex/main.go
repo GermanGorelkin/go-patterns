@@ -13,11 +13,12 @@ type singleton struct {
 }
 
 var instance *singleton
+var once sync.Once
 
 func GetInstance() Singleton {
-	if instance==nil {
+	once.Do(func() {
 		instance = new(singleton)
-	}
+	})
 
 	return instance
 }
