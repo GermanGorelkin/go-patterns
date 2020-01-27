@@ -1,0 +1,1 @@
+[Race condition и Data Race](https://medium.com/german-gorelkin/race-8936927dba20)
