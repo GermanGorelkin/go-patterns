@@ -1,0 +1,1 @@
+[Deadlocks, Livelocks и Starvation](https://medium.com/@german.gorelkin/deadlocks-livelocks-starvation-ccd22d06f3ae)
