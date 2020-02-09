@@ -1,2 +1,1 @@
-join point
-
+[Примитивы синхронизации в Go](https://medium.com/german-gorelkin/synchronization-primitives-go-8857747d9660)
