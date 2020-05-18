@@ -1,10 +1,29 @@
 package retry
 
 import (
+	"github.com/stretchr/testify/assert"
 	"math"
 	"testing"
 	"time"
 )
+
+func TestBackoff(t *testing.T) {
+	factor := 100 * time.Millisecond
+	maxAttempt := 5
+	backoff := NewBackoff(100*time.Millisecond, 10*time.Second, maxAttempt, ConstantBackoff(factor))
+
+	for i := 0; i < maxAttempt; i++ {
+		assert.Equal(t, factor, backoff.Next())
+	}
+	assert.Equal(t, Stop, backoff.Next())
+
+	backoff.Reset()
+
+	for i := 0; i < maxAttempt; i++ {
+		assert.Equal(t, factor, backoff.Next())
+	}
+	assert.Equal(t, Stop, backoff.Next())
+}
 
 func TestExponentialBackoff(t *testing.T) {
 	tests := map[string]struct {
