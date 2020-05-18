@@ -62,6 +62,43 @@ func TestLinerBackoff(t *testing.T) {
 	})
 }
 
+func TestConstantBackoff(t *testing.T) {
+	t.Run("factor=50ml", func(t *testing.T) {
+		factor := 100 * time.Millisecond
+		backoff := ConstantBackoff(factor)
+
+		tests := map[string]struct {
+			attemptNum int
+			min, max   time.Duration
+		}{
+			"1": {
+				attemptNum: 1,
+				min:        100 * time.Millisecond,
+				max:        10 * time.Second,
+			},
+			"2": {
+				attemptNum: 2,
+				min:        100 * time.Millisecond,
+				max:        10 * time.Second,
+			},
+			"3": {
+				attemptNum: 3,
+				min:        100 * time.Millisecond,
+				max:        10 * time.Second,
+			},
+		}
+
+		for name, tc := range tests {
+			t.Run(name, func(t *testing.T) {
+				actual := backoff(tc.attemptNum, tc.min, tc.max)
+				if actual != factor {
+					t.Fatalf("Got %s, Expecting %s", actual, factor)
+				}
+			})
+		}
+	})
+}
+
 func between(t *testing.T, actual, low, high time.Duration) {
 	t.Helper()
 	if actual < low {
