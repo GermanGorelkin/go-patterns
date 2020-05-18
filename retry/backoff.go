@@ -44,11 +44,8 @@ func (b *Backoff) Reset() {
 func ExponentialBackoff(attemptNum int, min, max time.Duration) time.Duration {
 	factor := 2.0
 	rand.Seed(time.Now().UnixNano())
-	delay := time.Duration(math.Pow(factor, float64(attemptNum)))
-	if delay < min {
-		delay = min
-	}
-	jitter := time.Duration(rand.Float64() * float64(delay-min))
+	delay := time.Duration(math.Pow(factor, float64(attemptNum)) * float64(min))
+	jitter := time.Duration(rand.Float64() * float64(min) * float64(attemptNum))
 
 	delay = delay + jitter
 	if delay > max {
