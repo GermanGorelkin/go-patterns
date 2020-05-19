@@ -33,6 +33,7 @@ func NewRetrier(backoff *Backoff, retryPolicy RetryPolicy) Retrier {
 }
 
 func (r Retrier) Run(ctx context.Context, work Worker) error {
+	defer r.backoff.Reset()
 	for {
 		err := work(ctx)
 
